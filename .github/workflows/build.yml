@@ -105,8 +105,7 @@ jobs:
           cd ~/twrp
 
           git clone \
-            https://github.com/prablordeppey/android_device_doogee_S100Pro.git \
-            device/doogee/S100PRO
+            https://github.com/prablordeppey/android_device_doogee_S100Pro.git
 
       - name: Build recovery
         run: |
