@@ -103,7 +103,7 @@ jobs:
 
           git clone \
             https://github.com/prablordeppey/android_device_doogee_S100Pro.git \
-            generic/vendor_boot
+            device/doogee/S100PRO
 
       - name: Build recovery
         run: |
