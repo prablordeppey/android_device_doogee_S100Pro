@@ -7,8 +7,10 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common Omni stuff.
-$(call inherit-product, vendor/omni/config/common.mk)
+# Inherit common TWRP stuff (vendor/omni doesn't exist on the AOSP-based
+# twrp-12.1 manifest — that's only in the older OmniROM-based manifest
+# for Android <=9).
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # Inherit from vendor_boot device
 $(call inherit-product, device/generic/vendor_boot/device.mk)

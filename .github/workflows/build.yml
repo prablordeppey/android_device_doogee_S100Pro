@@ -104,8 +104,14 @@ jobs:
         run: |
           cd ~/twrp
 
+          # This tree hardcodes LOCAL_PATH/DEVICE_PATH := device/generic/vendor_boot
+          # (and PRODUCT_DEVICE := vendor_boot) throughout — it must be checked
+          # out at exactly this path, not device/doogee/S100PRO, or the build
+          # can't find its own device.mk / prebuilt kernel and dies with
+          # "Device vendor_boot not found".
           git clone \
-            https://github.com/prablordeppey/android_device_doogee_S100Pro.git
+            https://github.com/prablordeppey/android_device_doogee_S100Pro.git \
+            device/generic/vendor_boot
 
       - name: Build recovery
         run: |
