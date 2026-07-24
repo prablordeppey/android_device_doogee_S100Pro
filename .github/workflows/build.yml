@@ -77,9 +77,13 @@ jobs:
           mkdir -p ~/twrp
           cd ~/twrp
 
+          # Android 12.1 (vendor_boot) devices need the AOSP-based manifest,
+          # not the omni one — platform_manifest_twrp_omni only goes up to
+          # Android 9.0 and its branches are named twrp-X.X, not android-X.X;
+          # there is no android-12.1 branch on it at all.
           repo init \
-            -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git \
-            -b android-12.1 \
+            -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git \
+            -b twrp-12.1 \
             --depth=1
 
       - name: Sync source
@@ -107,6 +111,10 @@ jobs:
       - name: Build recovery
         run: |
           cd ~/twrp
+
+          # generic vendor_boot builds like this one almost always hit
+          # missing proprietary deps partway through without this
+          export ALLOW_MISSING_DEPENDENCIES=true
 
           source build/envsetup.sh
 
