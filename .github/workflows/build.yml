@@ -47,7 +47,7 @@ jobs:
             libgl1-mesa-dev \
             libncurses-dev \
             libssl-dev \
-            libtinfo5 \
+            libncurses-dev \
             libxml2 \
             libxml2-utils \
             lzop \
