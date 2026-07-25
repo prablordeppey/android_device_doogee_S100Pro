@@ -96,7 +96,7 @@ TARGET_BOARD_PLATFORM := mt6789
 # size above) -- replace with the real value from
 # `fastboot getvar partition-size:super` or `lpdump` before relying on
 # this for anything that touches /system, /vendor, or /product.
-BOARD_SUPER_PARTITION_SIZE := 240000000
+BOARD_SUPER_PARTITION_SIZE := 9663676416
 BOARD_SUPER_PARTITION_GROUPS := main
 BOARD_MAIN_PARTITION_LIST := system vendor product vendor_dlkm odm_dlkm
 BOARD_SUPER_PARTITION_METADATA_DEVICE := system
