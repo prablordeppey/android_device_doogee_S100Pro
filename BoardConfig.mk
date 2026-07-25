@@ -17,6 +17,14 @@ TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := generic
 TARGET_CPU_VARIANT_RUNTIME := generic
 
+# This tree defines a single ABI (arm64-v8a) with no TARGET_2ND_ARCH, i.e.
+# no 32-bit compat ABI at all. Without an explicit answer here, board_config.mk
+# can't tell whether that's intentional and refuses to build
+# ("Building a 32-bit-app-only product on a 64-bit device").
+# We don't need 32-bit app support for a recovery-only build.
+TARGET_SUPPORTS_64_BIT_APPS := true
+TARGET_SUPPORTS_32_BIT_APPS := false
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := vendor_boot
 TARGET_NO_BOOTLOADER := true
