@@ -51,6 +51,17 @@ TARGET_COPY_OUT_VENDOR := vendor
 TARGET_BOARD_PLATFORM := mt6789
 
 # Recovery
+# NOTE: header v4 vendor_boot devices don't build a real "recovery" image at
+# all -- TWRP has to be packaged as a standalone recovery ramdisk *fragment*
+# inside vendor_boot.img instead. Without these three lines, the build
+# system has no rule that actually assembles a TWRP ramdisk, which is why
+# `mka vendorbootimage` previously produced a plain (non-TWRP) vendor_boot
+# image with nothing left to build ("ninja: no work to do").
+# Docs: https://source.android.com/docs/core/architecture/partitions/vendor-boot-partitions
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/recovery.fstab
+
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 TW_THEME := portrait_hdpi

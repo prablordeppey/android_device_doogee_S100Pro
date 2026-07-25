@@ -15,11 +15,16 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 # Inherit from vendor_boot device
 $(call inherit-product, device/generic/vendor_boot/device.mk)
 
+# NOTE: PRODUCT_DEVICE/PRODUCT_NAME are intentionally left as vendor_boot /
+# omni_vendor_boot -- Android.mk gates on `ifeq ($(TARGET_DEVICE),vendor_boot)`
+# and the CI workflow lunches "omni_vendor_boot-eng", so renaming these two
+# would require updating both of those in lockstep. Only the descriptive
+# identity strings below (which don't affect build wiring) are corrected.
 PRODUCT_DEVICE := vendor_boot
 PRODUCT_NAME := omni_vendor_boot
-PRODUCT_BRAND := generic
-PRODUCT_MODEL := Generic Device
-PRODUCT_MANUFACTURER := generic
+PRODUCT_BRAND := doogee
+PRODUCT_MODEL := S100 Pro
+PRODUCT_MANUFACTURER := doogee
 
 PRODUCT_GMS_CLIENTID_BASE := android-generic
 
