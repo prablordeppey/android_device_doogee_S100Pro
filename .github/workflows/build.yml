@@ -128,9 +128,14 @@ jobs:
 
           mka vendorbootimage -j$(nproc)
 
+      - name: Prepare artifacts
+        run: |
+          cd ~/twrp
+          mkdir -p /tmp/twrp-artifacts
+          find out/target/product -maxdepth 1 -name '*.img' -exec cp -v {} /tmp/twrp-artifacts/ \;
+
       - name: Upload images
         uses: actions/upload-artifact@v4
         with:
           name: twrp-images
-          path: |
-            ~/twrp/out/target/product/**/*.img
+          path: /tmp/twrp-artifacts/*.img
