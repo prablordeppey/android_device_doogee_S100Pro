@@ -116,17 +116,11 @@ jobs:
       - name: Build recovery
         run: |
           cd ~/twrp
-
-          # generic vendor_boot builds like this one almost always hit
-          # missing proprietary deps partway through without this
           export ALLOW_MISSING_DEPENDENCIES=true
-
           source build/envsetup.sh
-
           lunch omni_vendor_boot-eng || \
           lunch omni_vendor_boot-userdebug
-
-          mka vendorbootimage -j$(nproc)
+          mka adbd vendorbootimage -j$(nproc)
 
       - name: Prepare artifacts
         run: |
