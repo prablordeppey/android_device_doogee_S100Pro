@@ -23,7 +23,15 @@ TARGET_NO_BOOTLOADER := true
 TARGET_SCREEN_DENSITY := 480
 
 # Kernel
-BOARD_BOOTIMG_HEADER_VERSION := 4
+# AOSP's build system only counts a product as "building a vendor_boot
+# image" (sets internal BUILDING_VENDOR_BOOT_IMAGE := true) when it sees
+# BOARD_BOOT_HEADER_VERSION >= 3. "BOARD_BOOTIMG_HEADER_VERSION" (the name
+# this tree originally had) is not read anywhere in build/make/core -- it's
+# a harmless-looking typo that silently left BUILDING_VENDOR_BOOT_IMAGE
+# false the entire time, which is why nothing ever actually got built.
+# Source: https://android.googlesource.com/platform/build/+/master/core/board_config.mk
+BOARD_BOOT_HEADER_VERSION := 4
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_KERNEL_BASE := 0x3fff8000
 BOARD_KERNEL_CMDLINE := 
 BOARD_KERNEL_PAGESIZE := 4096
@@ -41,6 +49,12 @@ endif
 BOARD_FLASH_BLOCK_SIZE := 262144
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
+# UNVERIFIED: reusing BOARD_BOOTIMAGE_PARTITION_SIZE's value as a placeholder.
+# Every real header-v4 device tree sets this to the actual vendor_boot
+# partition size from the stock partition table -- get the real number
+# (fastboot getvar partition-size:vendor_boot, or the scatter file) before
+# relying on this build to flash correctly.
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
