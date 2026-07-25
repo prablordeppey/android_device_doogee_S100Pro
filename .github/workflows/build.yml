@@ -120,17 +120,7 @@ jobs:
           source build/envsetup.sh
           lunch omni_vendor_boot-eng || \
           lunch omni_vendor_boot-userdebug
-
-          # "vendorbootimage" alone isn't enough on this tree: the recovery
-          # ramdisk packaging rule (recovery_intermediates/ramdisk_files-timestamp)
-          # rsyncs from $(TARGET_ROOT_OUT) (out/target/product/vendor_boot/root),
-          # but that directory is only populated as a side effect of building
-          # the "ramdisk" goal -- it is not pulled in as a ninja prerequisite of
-          # "vendorbootimage" on this header-v4 (BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT)
-          # configuration. Without "ramdisk" as an explicit goal, TARGET_ROOT_OUT
-          # never gets built, so the rsync step fails with "No such file or
-          # directory" on out/.../vendor_boot/root.
-          mka adbd ramdisk vendorbootimage -j$(nproc)
+          mka adbd vendorbootimage -j$(nproc)
 
       - name: Prepare artifacts
         run: |
