@@ -1,4 +1,15 @@
-import /init.recovery.project.rc
+# init.recovery.mt6789.rc for Doogee S100 Pro (mt6789)
+#
+# Adapted from init.recovery.mt6789.rc in the correctly-unpacked
+# vendor_boot.img ramdisk. Two changes from the stock file:
+#   - Dropped "import /init.recovery.project.rc" -- that file was not
+#     present anywhere in the ramdisk, so importing it would fail to
+#     parse and could break init entirely.
+#   - Dropped the "on boot" block calling mtk_plpath_utils under the
+#     update_engine SELinux context -- that's a full-Android A/B OTA
+#     helper with no meaning in a recovery ramdisk; it isn't needed here
+#     and referencing a context/binary that may not exist in the TWRP
+#     ramdisk is a needless risk.
 
 on init
     setprop sys.usb.configfs 1
@@ -6,10 +17,7 @@ on init
     setprop sys.usb.ffs.aio_compat 0
 
 on fs && property:ro.debuggable=0
-    # distinguish USB shoulde connect or not, i.e. CDP vs SDP
+    # distinguish USB should connect or not, i.e. CDP vs SDP
     write /sys/class/udc/musb-hdrc/device/cmode 2
     # set charging free due to it wait for USB activation
     start adbd
-
-on boot
-    exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils

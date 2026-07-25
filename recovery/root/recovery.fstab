@@ -1,5 +1,30 @@
-# Android fstab file for TWRP
-#<src>  <mnt_point>  <type>  <mnt_flags>  <fs_mgr_flags>
-system  /system  ext4  defaults  defaults
-/dev/block/by-name/userdata  /data  f2fs  defaults  defaults
-/dev/block/by-name/boot  /boot  emmc  defaults  defaults
+# recovery.fstab for Doogee S100 Pro (mt6789)
+#
+# Derived from first_stage_ramdisk/fstab.mt6789 in the correctly-unpacked
+# vendor_boot.img ramdisk. This is NOT a copy of that file -- Android's
+# init fstab format and TWRP's recovery.fstab format are different syntax,
+# so each line below was translated by hand from the matching fstab.mt6789
+# entry, not guessed.
+#
+# <mount_point>  <fstype>  <primary_device>  <flags>
+
+/boot           emmc    /dev/block/by-name/boot                flags=slotselect
+/vendor_boot    emmc    /dev/block/by-name/vendor_boot          flags=slotselect
+/dtbo           emmc    /dev/block/by-name/dtbo                 flags=slotselect
+/misc           emmc    /dev/block/by-name/misc
+/metadata       ext4    /dev/block/by-name/metadata
+
+# Dynamic (logical) partitions -- resolved via device-mapper using the
+# BOARD_SUPER_PARTITION_* macros in BoardConfig.mk. Confirm those macros
+# (especially BOARD_SUPER_PARTITION_SIZE, currently a placeholder) before
+# relying on these mounting correctly.
+/system         ext4    /dev/block/mapper/system                flags=logical;slotselect;backup=1
+/vendor         ext4    /dev/block/mapper/vendor                flags=logical;slotselect;backup=1
+/product        ext4    /dev/block/mapper/product               flags=logical;slotselect;backup=1
+/vendor_dlkm    ext4    /dev/block/mapper/vendor_dlkm           flags=logical;slotselect
+/odm_dlkm       ext4    /dev/block/mapper/odm_dlkm              flags=logical;slotselect
+
+/data           f2fs    /dev/block/by-name/userdata             flags=fileencryption=aes-256-xts:aes-256-cts:v2:inlinecrypt_optimized;length=-16384
+
+/external_sd    vfat    /dev/block/mmcblk1p1  /dev/block/mmcblk1  flags=display="Micro_SD";storage;wipeingui;removable
+/usb-otg        vfat    /dev/block/sda1       /dev/block/sda      flags=display="USB_OTG";storage;wipeingui;removable
