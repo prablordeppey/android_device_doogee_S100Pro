@@ -42,15 +42,17 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 TARGET_FORCE_PREBUILT_KERNEL := true
 ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-# NOTE: the dtb.img build rule (build/make/core/Makefile) only fires when
-# BOARD_PREBUILT_DTBIMAGE_DIR is set -- it globs $(DIR)/*.dtb and
-# concatenates them. TARGET_PREBUILT_DTB is a different, unrelated
-# variable and isn't read by that rule at all, which is why ninja had
-# "no known rule" for dtb.img. The prebuilt file itself also needs a
-# .dtb extension to match the glob -- rename prebuilt/dtb.img to
-# prebuilt/dtb.dtb (content unchanged).
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 endif
+# TARGET_PREBUILT_DTB (above) is not read by the rule that actually builds
+# dtb.img -- that rule only gets a recipe when BOARD_PREBUILT_DTBIMAGE_DIR
+# points at a *directory* containing one or more .dtb files, which it then
+# concatenates. Without this, dtb.img was a phantom ninja dependency with
+# no rule to produce it, then (once fixed to have a rule but no files in
+# the dir) an empty file, which mkbootimg rejects with
+# "DTB image must not be empty".
+# Source: https://android.googlesource.com/platform/build/+/master/core/Makefile
+BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144
@@ -94,3 +96,4 @@ TW_USE_TOOLBOX := true
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 16.1.0
+
