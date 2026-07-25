@@ -42,7 +42,14 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 TARGET_FORCE_PREBUILT_KERNEL := true
 ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
+# NOTE: the dtb.img build rule (build/make/core/Makefile) only fires when
+# BOARD_PREBUILT_DTBIMAGE_DIR is set -- it globs $(DIR)/*.dtb and
+# concatenates them. TARGET_PREBUILT_DTB is a different, unrelated
+# variable and isn't read by that rule at all, which is why ninja had
+# "no known rule" for dtb.img. The prebuilt file itself also needs a
+# .dtb extension to match the glob -- rename prebuilt/dtb.img to
+# prebuilt/dtb.dtb (content unchanged).
+BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt
 endif
 
 # Partitions
@@ -87,4 +94,3 @@ TW_USE_TOOLBOX := true
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 16.1.0
-
