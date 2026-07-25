@@ -30,5 +30,18 @@ PRODUCT_COPY_FILES += \
 # rsync step failed with "No such file or directory". Giving it this one real
 # file is enough for the directory (and the rest of the baseline root fs
 # alongside it) to actually get built.
+#
+# Same problem, one level deeper, for recovery.fstab: that same packaging
+# rule finishes with
+# `cp -f $(TARGET_RECOVERY_FSTAB) $(TARGET_RECOVERY_ROOT_OUT)/system/etc/recovery.fstab`.
+# Plain cp never creates missing parent directories, and nothing in this tree
+# stages anything under "system/etc" in TARGET_ROOT_OUT, so that directory
+# doesn't exist in the baseline root and survives the rsync as still-missing
+# -- hence "No such file or directory" on system/etc/recovery.fstab. Staging
+# a copy of recovery.fstab at root/system/etc/recovery.fstab here forces that
+# directory to exist in the baseline root (PRODUCT_COPY_FILES creates parent
+# dirs as needed), so it's already present by the time the final cp runs;
+# that cp then just overwrites it with the same content.
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/recovery/root/init.recovery.mt6789.rc:root/init.recovery.mt6789.rc
+    $(LOCAL_PATH)/recovery/root/init.recovery.mt6789.rc:root/init.recovery.mt6789.rc \
+    $(LOCAL_PATH)/recovery/root/recovery.fstab:root/system/etc/recovery.fstab
